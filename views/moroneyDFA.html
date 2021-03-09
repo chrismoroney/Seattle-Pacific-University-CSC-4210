@@ -9,18 +9,46 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script>
-        var stateCheck = false;
         function checkNumber(){
+            var stateCheck = false;
+            var canContinue = true;
             var input = String(document.getElementById("insert").value);
             output.innerHTML = "<p>Result: Reject</p>";
             for(var i = 0; i < input.length; i++){
                 if(input.charAt(i) != '0' && input.charAt(i) != '1'){
-                    output.innerHTML = "<pre>Please enter an input string of only 0s and 1s.</pre>"
+                    output.innerHTML = "<pre>Please enter an input string of only 0s and 1s.</pre>";
+                    canContinue = false;
                     break;
                 } else {
                     if(input.length % 2 == 1){
-                        output.innerHTML = "<p>Result: Accept</p>"
+                        output.innerHTML = "<p>Result: Accept</p>";
+                        canContinue = true;
                     }
+                }
+            }
+            if(canContinue){
+                output.innerHTML += "<p>Reason:</p>";
+                output.innerHTML += "<pre>" + "Inputted String: " + "<b>" + input + "</b>" + "</pre>";
+                output.innerHTML += "<pre>Start State: q0</pre>";
+                for(var k = 0; k < input.length; k++){
+                    if(stateCheck == false){
+                        stateCheck = true;
+                        let outting = "(q0, " + input.charAt(k) + ") --> " + "<b>" + "q1" + "</b>";
+                        output.innerHTML += "<pre>" + outting + "</pre>";
+                    } else {
+                        stateCheck = false;
+                        let outting = "(q1, " + input.charAt(k) + ") --> " + "<b>" + "q0" + "</b>";
+                        output.innerHTML += "<pre>" + outting + "</pre>";
+                    }
+                }
+                if(stateCheck){
+                    let conclusion = "After consuming the whole string, the DFA ends in the accepting state, "
+                        + "<b>" + "q1" + "</b>" + ". Thus, the inputted string is " + "<b>" + "accepted." + "</b>";
+                    output.innerHTML += "<pre>" + conclusion + "</pre>";
+                } else {
+                    let conclusion = "After consuming the whole string, the DFA does not end in the accepting state, but rather in "
+                        + "<b>" + "q0" + "</b>" + ". Thus, the inputted string is " + "<b>" + "rejected." + "</b>";
+                    output.innerHTML += "<pre>" + conclusion + "</pre>";
                 }
             }
         }
@@ -34,11 +62,11 @@
 </div>
 
 <div class="container">
-    <div class="form-group">
-        <label for="insert">Insert a number:</label>
-        <input type="text" name="insert" id="insert" class="form-control" placeholder="number">
+    <label for="insert">Insert a string consisting of only 0s or 1s:</label>
+    <div class="input-group">
+        <input type="text" name="insert" id="insert" class="form-control" placeholder="Binary Number">
+        <button id="sendGuess" class="btn btn-danger">Submit String</button>
     </div>
-    <button type="submit" id="sendGuess" class="btn btn-primary">Submit string</button>
 </div>
 <div class="container">
     <div class="jumbotron" id="output">
