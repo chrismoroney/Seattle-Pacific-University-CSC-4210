@@ -4,6 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+var indexRouter = require('./routes/index');
 var moroneyRouter1 = require('./routes/moroneyDFAM1');
 var moroneyRouter2 = require('./routes/moroneyDFAM2');
 var moroneyRouter3 = require('./routes/moroneyDFAM3');
@@ -20,6 +21,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use('/', indexRouter);
 app.use('/moroneyDFAM1', moroneyRouter1);
 app.use('/moroneyDFAM2', moroneyRouter2);
 app.use('/moroneyDFAM3', moroneyRouter3);
