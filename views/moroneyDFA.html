@@ -4,14 +4,50 @@
     <meta charset="UTF-8">
     <title>Moroney DFA 4210</title>
     <link rel="stylesheet" href="../stylesheets/style.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script>
+        var stateCheck = false;
+        function checkNumber(){
+            var input = String(document.getElementById("insert").value);
+            output.innerHTML = "<p>Result: Reject</p>";
+            for(var i = 0; i < input.length; i++){
+                if(input.charAt(i) != '0' && input.charAt(i) != '1'){
+                    output.innerHTML = "<pre>Please enter an input string of only 0s and 1s.</pre>"
+                    break;
+                } else {
+                    if(input.length % 2 == 1){
+                        output.innerHTML = "<p>Result: Accept</p>"
+                    }
+                }
+            }
+        }
+    </script>
 </head>
 <body>
 <h1>Chris Moroney's CSC 4210 DFA Extra Credit</h1>
+
 <div class="image">
     <img src="../images/CSC_4210_DFA.jpg">
 </div>
+
+<div class="container">
+    <div class="form-group">
+        <label for="insert">Insert a number:</label>
+        <input type="text" name="insert" id="insert" class="form-control" placeholder="number">
+    </div>
+    <button type="submit" id="sendGuess" class="btn btn-primary">Submit string</button>
+</div>
+<div class="container">
+    <div class="jumbotron" id="output">
+
+    </div>
+</div>
+
+<script>
+    document.getElementById("sendGuess").addEventListener("click", checkNumber);
+</script>
 </body>
 </html>
