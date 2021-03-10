@@ -8,6 +8,77 @@
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script>
+        var statesChecked = false;
+        var states = [];
+        var startState = "";
+        function checkNumStates(){
+            var stateOutting = "";
+            states = [];
+            var input = document.getElementById("states").value;
+            stateOutput.innerHTML = "";
+            if(input <= 0){
+                stateOutput.innerHTML += "<pre> Please input a number greater than 0 </pre>";
+            } else {
+                statesChecked = true;
+                for (var i = 0; i < input; i++){
+                    states[i] = "q" + i;
+                    if(i == input-1){
+                        stateOutting += states[i];
+                    } else {
+                        stateOutting += states[i] + ", ";
+                    }
+                }
+            }
+            if(statesChecked){
+                stateOutput.innerHTML += "<pre>States (Q): {" + stateOutting + "}</pre>"
+            }
+        }
+        function checkAlphabet(){
+            var alphabetChecked = false;
+            var alphabet = [];
+            var alphaOutting = "";
+            var input = document.getElementById("alphabet").value;
+            alphaOutput.innerHTML = "";
+            if(input <= 0){
+                alphaOutput.innerHTML += "<pre> Please input a number greater than 0 </pre>";
+            } else {
+                alphabetChecked = true;
+                for (var i = 0; i < input; i++){
+                    alphabet[i] = i;
+                    if(i == input-1){
+                        alphaOutting += alphabet[i];
+                    } else {
+                        alphaOutting += alphabet[i] + ", ";
+                    }
+                }
+            }
+            if(alphabetChecked){
+                alphaOutput.innerHTML += "<pre>Alphabet (E): {" + alphaOutting + "}</pre>"
+            }
+        }
+        function checkStart(){
+            var checkStart = false;
+            var input = document.getElementById("start").value;
+            startState = "";
+            startOutput.innerHTML = "";
+
+            if(statesChecked){
+                var max = states.length - 1;
+                if(0 <= input && input <= max){
+                    checkStart = true;
+                    startState = states[input];
+                } else {
+                    startOutput.innerHTML += "<pre>Please input a valid number that corresponds to a state in Q (ex. 2 --> q2)</pre>";
+                }
+            } else {
+                startOutput.innerHTML += "<pre>Please input number of states first</pre>";
+            }
+            if(checkStart){
+                startOutput.innerHTML += "<pre> Start State (q0): " + startState + "</pre>";
+            }
+        }
+    </script>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -27,31 +98,53 @@
 </nav>
 <h1>Chris Moroney's CSC 4210 DFA Extra Credit</h1>
 <h3>Winter 2021</h3>
+
 <div class="container">
-    <div class="form-group">
-        <label for="states">Number of States (number greater than 0)</label>
+    <p>Please use this section to modify one of the existing machines or to create your own DFA. Formal descriptions are provided in each
+        of the existing machines.</p>
+    <br>
+    <label for="states">Number of States (number greater than 0)</label>
+    <div class="input-group">
         <input type="number" name="states" id="states" class="form-control"
                placeholder="2" required="true">
+        <button class="btn btn-info" id="btnSubmit1">Submit</button>
     </div>
-    <div class="form-group">
-        <label for="alphabet">Chars in Alphabet (comma separated, no spaces):</label>
-        <input type="text" name="alphabet" id="alphabet" class="form-control"
-               placeholder="0,1" required="true">
-    </div>
-    <div class="form-group">
-        <label for="start">Start state:</label>
-        <input type="text" name="start" id="start" class="form-control"
-               placeholder="q0" required="true">
-    </div>
-    <div class="form-group">
-        <label for="accept">Accept states (comma separated, no spaces):</label>
-        <input type="text" name="accept" id="accept" class="form-control"
-               placeholder="q0,q1" required="true">
-    </div>
-    <div class="jumbotron" id="output">
+    <div class="container" id="stateOutput">
 
     </div>
-    <button class="btn btn-info btn-lg" id="btnSubmitInfo">Submit Machine Info</button>
+    <label for="alphabet">Number of chars in Alphabet:</label>
+    <div class="input-group">
+        <input type="number" name="alphabet" id="alphabet" class="form-control"
+               placeholder="2" required="true">
+        <button class="btn btn-info" id="btnSubmit2">Submit</button>
+    </div>
+    <div class="container" id="alphaOutput">
+
+    </div>
+    <label for="alphabet">Start state (number corresponding to state):</label>
+    <div class="input-group">
+        <input type="number" name="start" id="start" class="form-control"
+               placeholder="0 --> q0" required="true">
+        <button class="btn btn-info" id="btnSubmit3">Submit</button>
+    </div>
+    <div class="container" id="startOutput">
+
+    </div>
+    <label for="alphabet">Accept states (comma separated, no spaces, e for empty):</label>
+    <div class="input-group">
+        <input type="text" name="accept" id="accept" class="form-control"
+               placeholder="q0,q1" required="true">
+        <button class="btn btn-info" id="btnSubmit4">Submit</button>
+    </div>
+    <div class="container" id="acceptOutput">
+
+    </div>
 </div>
+<script>
+    document.getElementById("btnSubmit1").addEventListener("click", checkNumStates);
+    document.getElementById("btnSubmit2").addEventListener("click", checkAlphabet);
+    document.getElementById("btnSubmit3").addEventListener("click", checkStart);
+    //document.getElementById("btnSubmit4").addEventListener("click", checkAccepts);
+</script>
 </body>
 </html>
