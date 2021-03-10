@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Moroney DFA 4210</title>
+    <title>Custom DFA</title>
     <link rel="stylesheet" href="../stylesheets/style.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
@@ -17,16 +17,41 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div class="navbar-nav">
-            <a class="nav-item nav-link active" href="/">Home</a>
+            <a class="nav-item nav-link" href="/">Home</a>
             <a class="nav-item nav-link" href="moroneyDFAM1">Machine 1</a>
             <a class="nav-item nav-link" href="moroneyDFAM2">Machine 2</a>
             <a class="nav-item nav-link" href="moroneyDFAM3">Machine 3</a>
-            <a class="nav-item nav-link" href="custom">Create your own DFA</a>
+            <a class="nav-item nav-link active" href="custom">Create your own DFA</a>
         </div>
     </div>
 </nav>
 <h1>Chris Moroney's CSC 4210 DFA Extra Credit</h1>
 <h3>Winter 2021</h3>
-<p style="text-align: center">Click on an option above in the Navbar menu.</p>
+<div class="container">
+    <div class="form-group">
+        <label for="states">Number of States (number greater than 0)</label>
+        <input type="number" name="states" id="states" class="form-control"
+               placeholder="2" required="true">
+    </div>
+    <div class="form-group">
+        <label for="alphabet">Chars in Alphabet (comma separated, no spaces):</label>
+        <input type="text" name="alphabet" id="alphabet" class="form-control"
+               placeholder="0,1" required="true">
+    </div>
+    <div class="form-group">
+        <label for="start">Start state:</label>
+        <input type="text" name="start" id="start" class="form-control"
+               placeholder="q0" required="true">
+    </div>
+    <div class="form-group">
+        <label for="accept">Accept states (comma separated, no spaces):</label>
+        <input type="text" name="accept" id="accept" class="form-control"
+               placeholder="q0,q1" required="true">
+    </div>
+    <div class="jumbotron" id="output">
+
+    </div>
+    <button class="btn btn-info btn-lg" id="btnSubmitInfo">Submit Machine Info</button>
+</div>
 </body>
 </html>

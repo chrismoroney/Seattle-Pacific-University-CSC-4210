@@ -8,6 +8,7 @@ var indexRouter = require('./routes/index');
 var moroneyRouter1 = require('./routes/moroneyDFAM1');
 var moroneyRouter2 = require('./routes/moroneyDFAM2');
 var moroneyRouter3 = require('./routes/moroneyDFAM3');
+var moroneyCustom = require('./routes/custom');
 
 var app = express();
 
@@ -25,6 +26,7 @@ app.use('/', indexRouter);
 app.use('/moroneyDFAM1', moroneyRouter1);
 app.use('/moroneyDFAM2', moroneyRouter2);
 app.use('/moroneyDFAM3', moroneyRouter3);
+app.use('/custom', moroneyCustom);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
