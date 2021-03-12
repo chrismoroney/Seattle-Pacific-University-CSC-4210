@@ -12,6 +12,8 @@
         var statesChecked = false;
         var states = [];
         var startState = "";
+        var acceptState = [];
+        var alphabet = [];
         function checkNumStates(){
             var stateOutting = "";
             states = [];
@@ -36,7 +38,7 @@
         }
         function checkAlphabet(){
             var alphabetChecked = false;
-            var alphabet = [];
+            alphabet = []
             var alphaOutting = "";
             var input = document.getElementById("alphabet").value;
             alphaOutput.innerHTML = "";
@@ -78,6 +80,48 @@
                 startOutput.innerHTML += "<pre> Start State (q0): " + startState + "</pre>";
             }
         }
+        function checkAccepts(){
+            var checkAccepts = false;
+            var input = document.getElementById("accept").value;
+            acceptState = [];
+            var acceptOutting = "";
+            acceptOutput.innerHTML = "";
+
+            if(statesChecked){
+                if(input == "e"){
+                    acceptState = [];
+                    checkAccepts = true;
+                } else if(input.includes(" ")){
+                    acceptOutput.innerHTML = "<pre>Please do not include spaces in list of accepts states</pre>";
+                } else {
+                    acceptState = input.split(',');
+                    for(var i = 0; i < acceptState.length; i++) {
+                        if (!states.includes(acceptState[i])) {
+                            checkAccepts = false;
+                            acceptOutput.innerHTML = "<pre>Please only enter valid states from the set of states " +
+                                "listed above and format input correctly.</pre>";
+                            break;
+                        } else {
+                            checkAccepts = true;
+                        }
+                    }
+                    if(checkAccepts){
+                        for(i = 0; i < acceptState.length; i++){
+                            if(i != acceptState.length - 1){
+                                acceptOutting += acceptState[i] + ", ";
+                            } else {
+                                acceptOutting += acceptState[i];
+                            }
+                        }
+                    }
+                }
+            } else {
+                acceptOutput.innerHTML = "<pre>Please valid number of states before entering accept states.</pre>";
+            }
+            if(checkAccepts){
+                acceptOutput.innerHTML += "<pre>Accept States (F): {" + acceptOutting + "}</pre>";
+            }
+        }
     </script>
 </head>
 <body>
@@ -106,22 +150,22 @@
     <label for="states">Number of States (number greater than 0)</label>
     <div class="input-group">
         <input type="number" name="states" id="states" class="form-control"
-               placeholder="2" required="true">
+               placeholder="0" required="true">
         <button class="btn btn-info" id="btnSubmit1">Submit</button>
     </div>
     <div class="container" id="stateOutput">
 
     </div>
-    <label for="alphabet">Number of chars in Alphabet:</label>
+    <label for="alphabet">Number of chars in Alphabet (number greater than 0):</label>
     <div class="input-group">
         <input type="number" name="alphabet" id="alphabet" class="form-control"
-               placeholder="2" required="true">
+               placeholder="0" required="true">
         <button class="btn btn-info" id="btnSubmit2">Submit</button>
     </div>
     <div class="container" id="alphaOutput">
 
     </div>
-    <label for="alphabet">Start state (number corresponding to state):</label>
+    <label for="start">Start state (number corresponding to state):</label>
     <div class="input-group">
         <input type="number" name="start" id="start" class="form-control"
                placeholder="0 --> q0" required="true">
@@ -130,7 +174,7 @@
     <div class="container" id="startOutput">
 
     </div>
-    <label for="alphabet">Accept states (comma separated, no spaces, e for empty):</label>
+    <label for="accept">Accept states (comma separated, no spaces, e for empty):</label>
     <div class="input-group">
         <input type="text" name="accept" id="accept" class="form-control"
                placeholder="q0,q1" required="true">
@@ -139,12 +183,22 @@
     <div class="container" id="acceptOutput">
 
     </div>
+    <label for="transition">Transitions (please follow the format below, each rule separated by |):</label>
+    <div class="input-group">
+        <input type="text" name="transition" id="transition" class="form-control"
+               placeholder="(current_state,alphabet,next_state)|(...)" required="true">
+        <button class="btn btn-info" id="btnSubmit5">Submit</button>
+    </div>
+    <div class="container" id="transitionOutput">
+
+    </div>
 </div>
 <script>
     document.getElementById("btnSubmit1").addEventListener("click", checkNumStates);
     document.getElementById("btnSubmit2").addEventListener("click", checkAlphabet);
     document.getElementById("btnSubmit3").addEventListener("click", checkStart);
-    //document.getElementById("btnSubmit4").addEventListener("click", checkAccepts);
+    document.getElementById("btnSubmit4").addEventListener("click", checkAccepts);
+    //document.getElementById("btnSubmit5").addEventListener("click", checkTransitions);
 </script>
 </body>
 </html>
