@@ -10,11 +10,15 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <script>
         var statesChecked = false;
+        var alphabetChecked = false;
+        var transitionsChecked = false;
         var states = [];
         var startState = "";
         var acceptState = [];
         var alphabet = [];
+        var transitions = [];
         function checkNumStates(){
+            statesChecked = false;
             var stateOutting = "";
             states = [];
             var input = document.getElementById("states").value;
@@ -37,7 +41,7 @@
             }
         }
         function checkAlphabet(){
-            var alphabetChecked = false;
+            alphabetChecked = false;
             alphabet = []
             var alphaOutting = "";
             var input = document.getElementById("alphabet").value;
@@ -67,7 +71,7 @@
 
             if(statesChecked){
                 var max = states.length - 1;
-                if(0 <= input && input <= max){
+                if(0 <= input && input <= max && input != ""){
                     checkStart = true;
                     startState = states[input];
                 } else {
@@ -118,8 +122,67 @@
             } else {
                 acceptOutput.innerHTML = "<pre>Please valid number of states before entering accept states.</pre>";
             }
-            if(checkAccepts){
+            if(checkAccepts) {
                 acceptOutput.innerHTML += "<pre>Accept States (F): {" + acceptOutting + "}</pre>";
+            }
+        }
+        function checkTransitions(){
+            // (currentstate,alphabet,nextstate)|(currentstate,alphabet,nextstate)|(...)
+            transitionsChecked = false;
+            var regex = /(\(q[0-9]+\,[0-9]+\,q[0-9]+\)\|)+|(\(q[0-9]+\,[0-9]+\,q[0-9]+\))/
+            var input = document.getElementById("transition").value;
+            var checks = [];
+            // preparing for actual DFA
+            var currentStates = [];
+            var alphasToMove = [];
+            var toStates = [];
+            transitionOutput.innerHTML = "";
+            if(statesChecked && alphabetChecked){
+                if(regex.test(input)){
+                    transitions = input.split("|");
+                    for(var i = 0; i < transitions.length; i++){
+                        checks = transitions[i].split(",");
+                        for(var k = 0; k < checks.length; k++){
+                            if(checks[k].includes('(')){
+                                checks[k] = checks[k].replace('(','');
+                            } else if (checks[k].includes(')')){
+                                checks[k] = checks[k].replace(')','');
+                            }
+                            if(k == 0){
+                                currentStates.push(checks[k]);
+                            } else if (k == 1){
+                                alphasToMove.push(checks[k]);
+                            } else {
+                                toStates.push(checks[k]);
+                            }
+                        }
+                    }
+                    for(i = 0; i < currentStates.length; i++){
+                        if(!(states.includes(currentStates[i]) || alphabet.includes(alphasToMove[i] || states.includes(toStates[i])))){
+                            transitionsChecked = false;
+                            transitionOutput.innerHTML = "<pre>Please only input valid states and alphabetical characters" +
+                                " from above.</pre>"
+                            break;
+                        } else if(currentStates.length < states.length * alphabet.length){
+                            transitionsChecked = false;
+                            transitionOutput.innerHTML = "<pre>Not enough transition rules. The total number of rules is " +
+                                "equal to the number of states times the number of characters in alphabet. </pre>"
+                        } else if(currentStates.length > states.length * alphabet.length){
+                            transitionsChecked = false;
+                            transitionOutput.innerHTML = "<pre>Too many transition rules. The total number of rules is " +
+                                "equal to the number of states times the number of characters in alphabet. </pre>"
+                        } else {
+                            transitionsChecked = true;
+                        }
+                    }
+                } else {
+                    transitionOutput.innerHTML = "<pre>Please input your rules using the correct formatting.</pre>"
+                }
+            } else {
+                transitionOutput.innerHTML = "<pre>Please input the number of states and chars in alphabet first.</pre>"
+            }
+            if(transitionsChecked){
+                transitionOutput.innerHTML = "<pre> Transition Function Rules (S): " + transitions + "</pre>";
             }
         }
     </script>
@@ -198,7 +261,7 @@
     document.getElementById("btnSubmit2").addEventListener("click", checkAlphabet);
     document.getElementById("btnSubmit3").addEventListener("click", checkStart);
     document.getElementById("btnSubmit4").addEventListener("click", checkAccepts);
-    //document.getElementById("btnSubmit5").addEventListener("click", checkTransitions);
+    document.getElementById("btnSubmit5").addEventListener("click", checkTransitions);
 </script>
 </body>
 </html>
