@@ -11,12 +11,20 @@
     <script>
         var statesChecked = false;
         var alphabetChecked = false;
+        var startChecked = false;
+        var acceptsChecked = false;
         var transitionsChecked = false;
+
         var states = [];
         var startState = "";
         var acceptState = [];
         var alphabet = [];
         var transitions = [];
+        var currentStates = [];
+        var alphasToMove = [];
+        var toStates = [];
+
+        var currentState;
         function checkNumStates(){
             statesChecked = false;
             states = [];
@@ -34,6 +42,7 @@
                 stateOutput.innerHTML += "<pre>States (Q): {" + states + "}</pre>"
             }
         }
+
         function checkAlphabet(){
             alphabetChecked = false;
             alphabet = []
@@ -51,15 +60,16 @@
                 alphaOutput.innerHTML += "<pre>Alphabet (E): {" + alphabet + "}</pre>"
             }
         }
+
         function checkStart(){
-            var checkStart = false;
+            startChecked = false;
             var input = document.getElementById("start").value;
             startState = "";
             startOutput.innerHTML = "";
 
             if(statesChecked){
                 if(states.includes("q" + input)){
-                    checkStart = true;
+                    startChecked = true;
                     startState = states[input];
                 } else {
                     startOutput.innerHTML += "<pre>Please input a valid number that corresponds to a state in Q (ex. 2 --> q2)</pre>";
@@ -67,12 +77,13 @@
             } else {
                 startOutput.innerHTML += "<pre>Please input number of states first</pre>";
             }
-            if(checkStart){
+            if(startChecked){
                 startOutput.innerHTML += "<pre> Start State (q0): " + startState + "</pre>";
             }
         }
+
         function checkAccepts(){
-            var checkAccepts = false;
+            acceptsChecked = false;
             var input = document.getElementById("accept").value;
             acceptState = [];
             acceptOutput.innerHTML = "";
@@ -80,19 +91,19 @@
             if(statesChecked){
                 if(input == "e"){
                     acceptState = [];
-                    checkAccepts = true;
+                    acceptsChecked = true;
                 } else if(input.includes(" ")){
                     acceptOutput.innerHTML = "<pre>Please do not include spaces in list of accepts states</pre>";
                 } else {
                     acceptState = input.split(',');
                     for(var i = 0; i < acceptState.length; i++) {
                         if (!states.includes(acceptState[i])) {
-                            checkAccepts = false;
+                            acceptsChecked = false;
                             acceptOutput.innerHTML = "<pre>Please only enter valid states from the set of states " +
                                 "listed above and format input correctly.</pre>";
                             break;
                         } else {
-                            checkAccepts = true;
+                            acceptsChecked = true;
                         }
                     }
                 }
@@ -103,6 +114,7 @@
                 acceptOutput.innerHTML += "<pre>Accept States (F): {" + acceptState + "}</pre>";
             }
         }
+
         function checkTransitions(){
             // (currentstate,alphabet,nextstate)|(currentstate,alphabet,nextstate)|(...)
             transitionsChecked = false;
@@ -110,9 +122,9 @@
             var input = document.getElementById("transition").value;
             var checks = [];
             // preparing for actual DFA
-            var currentStates = [];
-            var alphasToMove = [];
-            var toStates = [];
+            currentStates = [];
+            alphasToMove = [];
+            toStates = [];
             transitionOutput.innerHTML = "";
             if(statesChecked && alphabetChecked){
                 if(regex.test(input)){
@@ -148,20 +160,42 @@
                         } else {
                             transitionsChecked = false;
                             transitionOutput.innerHTML = "<pre>Please only input valid states and alphabetical characters" +
-                                " from above.</pre>"
+                                " from above.</pre>";
                             break;
                         }
                     }
                 } else {
-                    transitionOutput.innerHTML = "<pre>Please input your rules using the correct formatting.</pre>"
+                    transitionOutput.innerHTML = "<pre>Please input your rules using the correct formatting.</pre>";
                 }
             } else {
-                transitionOutput.innerHTML = "<pre>Please input the number of states and chars in alphabet first.</pre>"
+                transitionOutput.innerHTML = "<pre>Please input the number of states and chars in alphabet first.</pre>";
             }
             if(transitionsChecked){
                 transitionOutput.innerHTML = "<pre>Transition Function Rules (S): " + transitions + "</pre>";
             }
         }
+
+        function makeGuess(){
+            var input = String(document.getElementById("insert").value());
+
+            if(!(statesChecked && alphabetChecked && startChecked && acceptsChecked && transitionsChecked)){
+                output.innerHTML = "<pre>Please fill in all field above before entering a String.</pre>";
+            } else {
+                currentState = startState;
+                for(var i = 0; i < input.length; i++){
+                    if(!alphabet.includes(input.charAt(i))){
+                        output.innerHTML = "<pre>Please input a string consisting of characters from your provided language.</pre>";
+                        break;
+                    }
+                }
+                if(acceptState.includes(currentState)){
+                    // accept
+                } else {
+                    // reject
+                }
+            }
+        }
+
     </script>
 </head>
 <body>
@@ -233,12 +267,25 @@
 
     </div>
 </div>
+<div class="container">
+    <label for="insert">Insert a string consisting of only characters from your alphabet:</label>
+    <div class="input-group">
+        <input type="text" name="insert" id="insert" class="form-control" placeholder="Binary Number">
+        <button id="sendGuess" class="btn btn-danger">Submit String</button>
+    </div>
+</div>
+<div class="container">
+    <div class="jumbotron" id="output">
+
+    </div>
+</div>
 <script>
     document.getElementById("btnSubmit1").addEventListener("click", checkNumStates);
     document.getElementById("btnSubmit2").addEventListener("click", checkAlphabet);
     document.getElementById("btnSubmit3").addEventListener("click", checkStart);
     document.getElementById("btnSubmit4").addEventListener("click", checkAccepts);
     document.getElementById("btnSubmit5").addEventListener("click", checkTransitions);
+    document.getElementById("sendGuess").addEventListener("click", makeGuess);
 </script>
 </body>
 </html>
