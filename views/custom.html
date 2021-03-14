@@ -39,7 +39,7 @@
                 }
             }
             if(statesChecked){
-                stateOutput.innerHTML += "<pre>States (Q): {" + states + "}</pre>"
+                stateOutput.innerHTML += "<pre> <b>Success!</b> States (Q): {" + states + "}</pre>"
             }
         }
 
@@ -57,7 +57,7 @@
                 }
             }
             if(alphabetChecked){
-                alphaOutput.innerHTML += "<pre>Alphabet (E): {" + alphabet + "}</pre>"
+                alphaOutput.innerHTML += "<pre><b>Success!</b> Alphabet (E): {" + alphabet + "}</pre>"
             }
         }
 
@@ -78,7 +78,7 @@
                 startOutput.innerHTML += "<pre>Please input number of states first</pre>";
             }
             if(startChecked){
-                startOutput.innerHTML += "<pre> Start State (q0): " + startState + "</pre>";
+                startOutput.innerHTML += "<pre><b>Success!</b>  Start State (q0): " + startState + "</pre>";
             }
         }
 
@@ -110,13 +110,13 @@
             } else {
                 acceptOutput.innerHTML = "<pre>Please valid number of states before entering accept states.</pre>";
             }
-            if(checkAccepts) {
-                acceptOutput.innerHTML += "<pre>Accept States (F): {" + acceptState + "}</pre>";
+            if(acceptsChecked) {
+                acceptOutput.innerHTML += "<pre><b>Success!</b> Accept States (F): {" + acceptState + "}</pre>";
             }
         }
 
         function checkTransitions(){
-            // (currentstate,alphabet,nextstate)|(currentstate,alphabet,nextstate)|(...)
+            // (currentstate, alphabet, nextstate)|(currentstate, alphabet, nextstate)|(...)
             transitionsChecked = false;
             var regex = /(\(q[0-9]+\,[0-9]+\,q[0-9]+\)\|)+|(\(q[0-9]+\,[0-9]+\,q[0-9]+\))/
             var input = document.getElementById("transition").value;
@@ -147,8 +147,11 @@
                         }
                     }
                     for(i = 0; i < currentStates.length; i++){
-                        if(states.includes(currentStates[i]) && alphabet.includes(alphasToMove[i]) && states.includes(toStates[i])){
-                            transitionsChecked = true;
+                        if(!(states.includes(currentStates[i]) && alphabet.includes(alphasToMove[i]) && states.includes(toStates[i]))){
+                            transitionsChecked = false;
+                            transitionOutput.innerHTML = "<pre>Please only input valid states and alphabetical characters" +
+                                " from above and make sure your formatting is correct.</pre>";
+                            break;
                         } else if (currentStates.length < states.length * alphabet.length){
                             transitionsChecked = false;
                             transitionOutput.innerHTML = "<pre>Not enough transition rules. The total number of rules is " +
@@ -158,10 +161,7 @@
                             transitionOutput.innerHTML = "<pre>Too many transition rules. The total number of rules is " +
                                 "equal to the number of states times the number of characters in alphabet. </pre>"
                         } else {
-                            transitionsChecked = false;
-                            transitionOutput.innerHTML = "<pre>Please only input valid states and alphabetical characters" +
-                                " from above.</pre>";
-                            break;
+                            transitionsChecked = true;
                         }
                     }
                 } else {
@@ -171,31 +171,60 @@
                 transitionOutput.innerHTML = "<pre>Please input the number of states and chars in alphabet first.</pre>";
             }
             if(transitionsChecked){
-                transitionOutput.innerHTML = "<pre>Transition Function Rules (S): " + transitions + "</pre>";
+                transitionOutput.innerHTML = "<pre><b>Success!</b> Transition Function Rules (S): {" + transitions + "}</pre>";
             }
         }
 
         function makeGuess(){
-            var input = String(document.getElementById("insert").value());
+            var input = String(document.getElementById("insert").value);
+            output.innerHTML = "";
+            var outting = "";
+            var cantFind = false;
 
             if(!(statesChecked && alphabetChecked && startChecked && acceptsChecked && transitionsChecked)){
-                output.innerHTML = "<pre>Please fill in all field above before entering a String.</pre>";
+                output.innerHTML = "<pre>Please fill in all fields above before entering a String.</pre>";
             } else {
                 currentState = startState;
+                outting += "<p>Reason:</p>";
+                outting += "<pre>" + "Inputted String: " + "<b>" + input + "</b>" + "</pre>";
+                outting += "<pre>Start State (q0): " + currentState + "</pre>"
                 for(var i = 0; i < input.length; i++){
                     if(!alphabet.includes(input.charAt(i))){
-                        output.innerHTML = "<pre>Please input a string consisting of characters from your provided language.</pre>";
+                        outting = "<pre>Please input a string consisting of characters from your provided language.</pre>";
+                        cantFind = true;
                         break;
+                    } else {
+                        for(var k = 0; k < currentStates.length; k++){
+                            cantFind = true;
+                            if(currentStates[k] == currentState && alphasToMove[k] == input[i]){
+                                cantFind = false;
+                                outting += "<pre>(" + currentState + ", " + input[i] + ") --> " + "<b>" + toStates[k] + "</b>" +
+                                    " because of rule: " + transitions[k] + "</pre>";
+                                currentState = toStates[k];
+                                break;
+                            }
+                        }
+                        if (cantFind){
+                            outting += "<pre>Please check your transition function rules, as the machine could not find a " +
+                                "valid transition.</pre>";
+                        }
                     }
+
                 }
-                if(acceptState.includes(currentState)){
-                    // accept
+                if(acceptState.includes(currentState) && !cantFind){
+                    output.innerHTML = "<p>Result: Accept</p>";
+                    outting += "After consuming the whole string, the DFA ends in an accepting state, which is a state in this set: {"
+                        + "<b>" + acceptState + "</b>" + "}. Thus, the inputted string is " + "<b>" + "accepted." + "</b>";
+                } else if(cantFind) {
+                    output.innerHTML = "<p>Result: Undetermined</p>";
                 } else {
-                    // reject
+                    output.innerHTML = "<p>Result: Reject</p>";
+                    outting += "After consuming the whole string, the DFA does not end in an accepting state, which is a state in this set: {"
+                        + "<b>" + acceptState + "</b>" + "}. Thus, the inputted string is " + "<b>" + "rejected." + "</b>";
                 }
+                output.innerHTML += outting;
             }
         }
-
     </script>
 </head>
 <body>
@@ -257,7 +286,7 @@
     <div class="container" id="acceptOutput">
 
     </div>
-    <label for="transition">Transitions (please follow the format below, each rule separated by |):</label>
+    <label for="transition">Transitions (please follow the format below, each rule separated by '|', no spaces):</label>
     <div class="input-group">
         <input type="text" name="transition" id="transition" class="form-control"
                placeholder="(current_state,alphabet,next_state)|(...)" required="true">

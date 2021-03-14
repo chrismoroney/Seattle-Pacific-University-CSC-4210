@@ -42,11 +42,11 @@
                     }
                 }
                 if(stateCheck){
-                    let conclusion = "After consuming the whole string, the DFA ends in the accepting state, "
+                    let conclusion = "After consuming the whole string, the DFA ends in an accepting state, "
                         + "<b>" + "q1" + "</b>" + ". Thus, the inputted string is " + "<b>" + "accepted." + "</b>";
                     output.innerHTML += "<pre>" + conclusion + "</pre>";
                 } else {
-                    let conclusion = "After consuming the whole string, the DFA does not end in the accepting state, but rather in "
+                    let conclusion = "After consuming the whole string, the DFA does not end in an accepting state, but rather in "
                         + "<b>" + "q0" + "</b>" + ". Thus, the inputted string is " + "<b>" + "rejected." + "</b>";
                     output.innerHTML += "<pre>" + conclusion + "</pre>";
                 }
