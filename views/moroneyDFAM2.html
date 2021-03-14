@@ -9,7 +9,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <style>
         body {
-            font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+            font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
         }
 
         a {
@@ -25,8 +25,8 @@
 
         b {
             font: 18px "Lucida Grande", Helvetica, Arial, sans-serif;
+            font-weight: bold;
         }
-
         .image img {
             display: block;
             margin-left: auto;
@@ -74,7 +74,7 @@
             }
             if(canContinue){
                 output.innerHTML += "<p>Reason:</p>";
-                output.innerHTML += "<pre>" + "Inputted String: " + "<b>" + input + "</b>" + "</pre>";
+                output.innerHTML += "<pre>" + "Inputted String: <b>" + input  + "</b></pre>";
                 output.innerHTML += "<pre>Start State: q0</pre>";
                 for(var k = 0; k < input.length; k++){
                     if(stateCheck == true){
