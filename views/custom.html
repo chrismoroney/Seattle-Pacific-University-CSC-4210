@@ -19,7 +19,6 @@
         var transitions = [];
         function checkNumStates(){
             statesChecked = false;
-            var stateOutting = "";
             states = [];
             var input = document.getElementById("states").value;
             stateOutput.innerHTML = "";
@@ -28,22 +27,16 @@
             } else {
                 statesChecked = true;
                 for (var i = 0; i < input; i++){
-                    states[i] = "q" + i;
-                    if(i == input-1){
-                        stateOutting += states[i];
-                    } else {
-                        stateOutting += states[i] + ", ";
-                    }
+                    states.push("q" + String(i));
                 }
             }
             if(statesChecked){
-                stateOutput.innerHTML += "<pre>States (Q): {" + stateOutting + "}</pre>"
+                stateOutput.innerHTML += "<pre>States (Q): {" + states + "}</pre>"
             }
         }
         function checkAlphabet(){
             alphabetChecked = false;
             alphabet = []
-            var alphaOutting = "";
             var input = document.getElementById("alphabet").value;
             alphaOutput.innerHTML = "";
             if(input <= 0){
@@ -51,16 +44,11 @@
             } else {
                 alphabetChecked = true;
                 for (var i = 0; i < input; i++){
-                    alphabet[i] = i;
-                    if(i == input-1){
-                        alphaOutting += alphabet[i];
-                    } else {
-                        alphaOutting += alphabet[i] + ", ";
-                    }
+                    alphabet.push(String(i));
                 }
             }
             if(alphabetChecked){
-                alphaOutput.innerHTML += "<pre>Alphabet (E): {" + alphaOutting + "}</pre>"
+                alphaOutput.innerHTML += "<pre>Alphabet (E): {" + alphabet + "}</pre>"
             }
         }
         function checkStart(){
@@ -70,8 +58,7 @@
             startOutput.innerHTML = "";
 
             if(statesChecked){
-                var max = states.length - 1;
-                if(0 <= input && input <= max && input != ""){
+                if(states.includes("q" + input)){
                     checkStart = true;
                     startState = states[input];
                 } else {
@@ -88,7 +75,6 @@
             var checkAccepts = false;
             var input = document.getElementById("accept").value;
             acceptState = [];
-            var acceptOutting = "";
             acceptOutput.innerHTML = "";
 
             if(statesChecked){
@@ -109,21 +95,12 @@
                             checkAccepts = true;
                         }
                     }
-                    if(checkAccepts){
-                        for(i = 0; i < acceptState.length; i++){
-                            if(i != acceptState.length - 1){
-                                acceptOutting += acceptState[i] + ", ";
-                            } else {
-                                acceptOutting += acceptState[i];
-                            }
-                        }
-                    }
                 }
             } else {
                 acceptOutput.innerHTML = "<pre>Please valid number of states before entering accept states.</pre>";
             }
             if(checkAccepts) {
-                acceptOutput.innerHTML += "<pre>Accept States (F): {" + acceptOutting + "}</pre>";
+                acceptOutput.innerHTML += "<pre>Accept States (F): {" + acceptState + "}</pre>";
             }
         }
         function checkTransitions(){
@@ -158,12 +135,9 @@
                         }
                     }
                     for(i = 0; i < currentStates.length; i++){
-                        if(!(states.includes(currentStates[i]) || alphabet.includes(alphasToMove[i] || states.includes(toStates[i])))){
-                            transitionsChecked = false;
-                            transitionOutput.innerHTML = "<pre>Please only input valid states and alphabetical characters" +
-                                " from above.</pre>"
-                            break;
-                        } else if(currentStates.length < states.length * alphabet.length){
+                        if(states.includes(currentStates[i]) && alphabet.includes(alphasToMove[i]) && states.includes(toStates[i])){
+                            transitionsChecked = true;
+                        } else if (currentStates.length < states.length * alphabet.length){
                             transitionsChecked = false;
                             transitionOutput.innerHTML = "<pre>Not enough transition rules. The total number of rules is " +
                                 "equal to the number of states times the number of characters in alphabet. </pre>"
@@ -172,7 +146,10 @@
                             transitionOutput.innerHTML = "<pre>Too many transition rules. The total number of rules is " +
                                 "equal to the number of states times the number of characters in alphabet. </pre>"
                         } else {
-                            transitionsChecked = true;
+                            transitionsChecked = false;
+                            transitionOutput.innerHTML = "<pre>Please only input valid states and alphabetical characters" +
+                                " from above.</pre>"
+                            break;
                         }
                     }
                 } else {
@@ -182,7 +159,7 @@
                 transitionOutput.innerHTML = "<pre>Please input the number of states and chars in alphabet first.</pre>"
             }
             if(transitionsChecked){
-                transitionOutput.innerHTML = "<pre> Transition Function Rules (S): " + transitions + "</pre>";
+                transitionOutput.innerHTML = "<pre>Transition Function Rules (S): " + transitions + "</pre>";
             }
         }
     </script>
